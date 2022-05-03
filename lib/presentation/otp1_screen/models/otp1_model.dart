@@ -1,0 +1,1 @@
+class Otp1Model {}
