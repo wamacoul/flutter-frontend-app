@@ -18,7 +18,7 @@ import 'package:test1/presentation/app_navigation_screen/app_navigation_screen.d
 import 'package:test1/presentation/app_navigation_screen/binding/app_navigation_binding.dart';
 import 'package:get/get.dart';
 
-class aAppRoutes {
+class AppRoutes {
   static String authWelcomeScreen = '/auth_welcome_screen';
 
   static String changePasswordScreen = '/change_password_screen';
