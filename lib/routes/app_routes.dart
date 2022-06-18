@@ -56,14 +56,14 @@ class AppRoutes {
     ),
     GetPage(
       name: forgotPasswordScreen,
-      page: () => ForgotPasswordScreen(),
+      page: () => ForgotPasswordScreens(),
       bindings: [
         ForgotPasswordBinding(),
       ],
     ),
     GetPage(
       name: otp1Screen,
-      page: () => Otp1Screen(),
+      page: () => Otp1Screens(phoneNumber: 696918852.toString()),
       bindings: [
         Otp1Binding(),
       ],
@@ -84,14 +84,14 @@ class AppRoutes {
     ),
     GetPage(
       name: signup4Screen,
-      page: () => Signup4Screen(),
+      page: () => Signup4Screens(),
       bindings: [
         Signup4Binding(),
       ],
     ),
     GetPage(
       name: login4Screen,
-      page: () => Login4Screen(),
+      page: () => Login4Screens(),
       bindings: [
         Login4Binding(),
       ],

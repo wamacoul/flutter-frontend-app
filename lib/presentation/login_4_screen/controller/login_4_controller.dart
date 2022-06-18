@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import '/core/app_export.dart';
 import 'package:test1/presentation/login_4_screen/models/login_4_model.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class Login4Controller extends GetxController with StateMixin<dynamic> {
   TextEditingController phoneNumberController = TextEditingController();
@@ -20,75 +23,23 @@ class Login4Controller extends GetxController with StateMixin<dynamic> {
     phoneNumberController.dispose();
     passwordController.dispose();
   }
+
+  static loginUser(String phoneNumber, String password) async {
+    String stringUrl = 'https://fast-headland-42853.herokuapp.com/users';
+    var url = Uri.parse(stringUrl);
+    try {
+      final response = await http.post(url,
+          headers: {
+            "content-type": "application/json",
+            "Accept": "application/json",
+          },
+          body: jsonEncode(
+              {"username": "donel@gmail.com", "password": "password"}));
+
+      return response.statusCode;
+    } catch (e) {
+      debugPrint(e.toString());
+      return 600;
+    }
+  }
 }
-/* 
-
-  class NetworkRequest extends StatefulWidget {
-    NetworkRequest({Key? key}) : super(key: key);
-
-    @override
-    State<NetworkRequest> createState() => _NetworkRequestState();
-  }
-
-  class _NetworkRequestState extends State<NetworkRequest> {
-  
-    late List<dynamic> newsletters = new List<dynamic>.empty(growable: true);
-    var index = 1;
-    @override
-    void initState() {
-      // TODO: implement initState
-      super.initState();
-      loadNewsletters(index);
-    }
-
-    void addnewsletters() {
-      index -= 1;
-      loadNewsletters(index);
-    }
-
-    void loadNewsletters(int index) {
-      String url = 'http://10.0.2.2:8000/api/administrators';
-      debugPrint(url);
-      http.get(Uri.parse(url)).then((resp) {
-        setState(() {
-          debugPrint(json.decode(resp.body)['hydra:member'][2]['id'].toString());
-          this.newsletters += json.decode(resp.body)['hydra:member'];
-        });
-      }).catchError((err) {
-        print(err);
-      });
-    }
-
-    @override
-    Widget build(BuildContext context) {
-      return Scaffold(
-          appBar: AppBar(
-            title: Text("Newsletter Aministrators"),
-          ),
-          body: Center(
-              child: this.newsletters == null
-                  ? Center(
-                      child: Text("erreur sur le chargement des donnees"),
-                    )
-                  : ListView.builder(
-                      itemCount: (this.newsletters == null)
-                          ? 0
-                          : this.newsletters.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Text(
-                            this.newsletters[index]['firstName'],
-                            style: TextStyle(fontSize: 18.0),
-                          ),
-                          subtitle: Text(
-                            this.newsletters[index]['email'],
-                            style: TextStyle(
-                                fontSize: 12.0, fontWeight: FontWeight.bold),
-                          ),
-                        );
-                      })));
-    }
-  }
-
-  
-*/ 

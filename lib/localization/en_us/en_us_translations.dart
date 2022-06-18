@@ -22,7 +22,7 @@ final Map<String, String> enUs = {
   "msg_trying_to_auto3": "Trying to auto-fill verification code. 00:15",
   "lbl_sign_up": "Sign Up",
   "msg_lorem_ipsum_dol":
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "Enter your phone Number to receive code verification.",
   "msg_forgot_password": "Forgot Password?",
   "lbl_and": " and ",
   "lbl_privacy_policy": "Privacy Policy",
@@ -41,7 +41,7 @@ final Map<String, String> enUs = {
       "By continuing, you agree with our Terms & Conditions and Privacy Policy",
   "lbl_signup_4": "SignUp 4",
   "msg_sent_4_digit_ve":
-      "Sent 4 digit verification code to your registered phone number id. Change Phone Number.",
+      "Sent 6 digit verification code to your registered phone number id. Change Phone Number.",
   "msg_don_t_have_an_a2": "Don’t have an account?",
   "lbl_login": "Login",
   "msg_enter_your_regi": "Enter your registered email",
@@ -60,5 +60,6 @@ final Map<String, String> enUs = {
   "lbl_get_in_through": "Get in through",
   "lbl_full_name": "Full Name",
   "lbl_first_name": "First Name",
-  "lbl_phone_number": "Phone Number"
+  "lbl_phone_number": "Phone Number",
+  "lbl_username": "Username"
 };

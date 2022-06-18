@@ -1,10 +1,91 @@
-import 'controller/otp1_controller.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:test1/core/app_export.dart';
+import 'dart:async';
 
-class Otp1Screen extends GetWidget<Otp1Controller> {
+import 'package:flutter/material.dart';
+import 'package:flutter_pin_code_fields/flutter_pin_code_fields.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:test1/core/app_export.dart';
+import 'package:test1/presentation/otp1_screen/controller/otp1_controller.dart';
+
+class Otp1Screens extends StatefulWidget {
+  Otp1Screens({required this.phoneNumber, Key? key}) : super(key: key);
+
+  final String phoneNumber;
+
+  @override
+  State<Otp1Screens> createState() => Otp1Screen();
+}
+
+class Otp1Screen extends State<Otp1Screens> {
+  int _chrono = 25;
+  late Timer _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    setState(() {
+      if (_chrono > 0) {
+        _chrono--;
+      } else {}
+    });
+  });
+  void _startTimer() {
+    _chrono = 10;
+    if (_timer != null) {
+      _timer.cancel();
+    }
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        if (_chrono > 0) {
+          _chrono--;
+        } else {}
+      });
+    });
+  }
+
+  bool onTapNext = false;
+
+  String codeUserEnter = "";
+
+  String _error = "";
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    sendCode();
+    _startTimer();
+    debugPrint('${widget.phoneNumber}');
+    _chrono = 25;
+  }
+
+  setError(String error) {
+    setState(() {
+      _error = error;
+    });
+  }
+
+  void verificationCode() async {
+    debugPrint("enter verificationCode");
+    int responseCode = await Otp1Controller.codeUser(codeUserEnter);
+    if (responseCode == 200) {
+      debugPrint("request success");
+      setError("");
+    }
+    if (responseCode == 250) {
+      setError("your code don't match");
+    }
+    if (responseCode != 200 && responseCode != 250) {
+      setError("we can't verify your code");
+    }
+  }
+
+  void sendCode() async {
+    debugPrint("enter sendCode");
+    int responseCode =
+        await Otp1Controller.sendcodeUser('+237' + '${widget.phoneNumber}');
+    if (responseCode != 200) {
+      setError(
+          "Failed to send code. try again by pressing resend or back to change phone Number");
+    } else {
+      debugPrint("request success");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -118,7 +199,7 @@ class Otp1Screen extends GetWidget<Otp1Controller> {
                                 height: 1.43,
                               ),
                             ),
-                            TextSpan(
+                            /* TextSpan(
                               text: "lbl_change_phone_number".tr,
                               style: TextStyle(
                                 color: ColorConstant.lightBlueA200,
@@ -130,7 +211,7 @@ class Otp1Screen extends GetWidget<Otp1Controller> {
                                 letterSpacing: 0.12,
                                 height: 1.43,
                               ),
-                            )
+                            ) */
                           ],
                         ),
                         textAlign: TextAlign.left,
@@ -153,10 +234,9 @@ class Otp1Screen extends GetWidget<Otp1Controller> {
                       width: getHorizontalSize(
                         336.00,
                       ),
-                      child: Obx(
+                      child: /* Obx(
                         () => PinCodeTextField(
                           appContext: context,
-                          controller: controller.otpController.value,
                           length: 4,
                           obscureText: false,
                           obscuringCharacter: '*',
@@ -185,6 +265,22 @@ class Otp1Screen extends GetWidget<Otp1Controller> {
                             activeColor: ColorConstant.fromHex("#1212121D"),
                           ),
                         ),
+                      ), */
+                          PinCodeFields(
+                        keyboardType: TextInputType.number,
+                        length: 6,
+                        onChange: (value) => {
+                          if (value.length < 6)
+                            {
+                              onTapNext = false,
+                            }
+                        },
+                        onComplete: (result) {
+                          // Your logic with code
+                          onTapNext = true;
+                          codeUserEnter = result;
+                          debugPrint(result);
+                        },
                       ),
                     ),
                   ),
@@ -219,7 +315,7 @@ class Otp1Screen extends GetWidget<Otp1Controller> {
                               ),
                             ),
                             TextSpan(
-                              text: "lbl_00_25".tr,
+                              text: '$_chrono' + "s",
                               style: TextStyle(
                                 color: ColorConstant.lightBlueA200,
                                 fontSize: getFontSize(
@@ -276,7 +372,7 @@ class Otp1Screen extends GetWidget<Otp1Controller> {
                           21.00,
                         ),
                       ),
-                      child: Text(
+                      child: /* Text(
                         "lbl_resend".tr,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.left,
@@ -287,10 +383,28 @@ class Otp1Screen extends GetWidget<Otp1Controller> {
                           letterSpacing: 0.12,
                           height: 1.43,
                         ),
-                      ),
+                      ), */
+                          GestureDetector(
+                              onTap: () {
+                                // onTapForgotPassword();
+                                debugPrint("test");
+                                if (_chrono < 1) {
+                                  _startTimer();
+                                  sendCode();
+                                  debugPrint("enter");
+                                }
+                              },
+                              child: Text("lbl_resend".tr,
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.center,
+                                  style: (_chrono > 0)
+                                      ? AppStyle.textStylePoppinsbold12
+                                      : AppStyle.textStylePoppinsbold122
+                                          .copyWith(
+                                              fontSize: getFontSize(12)))),
                     ),
                   ),
-                  Align(
+                  /* Align(
                     alignment: Alignment.center,
                     child: Padding(
                       padding: EdgeInsets.only(
@@ -326,6 +440,86 @@ class Otp1Screen extends GetWidget<Otp1Controller> {
                           ),
                         ),
                       ),
+                    ),
+                  ), */
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: getHorizontalSize(
+                        5,
+                      ),
+                      top: getVerticalSize(
+                        10,
+                      ),
+                      right: getHorizontalSize(
+                        5,
+                      ),
+                    ),
+                    child: Center(
+                        child: Text('$_error',
+                            style: TextStyle(color: Colors.red, fontSize: 14))),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      //login();
+                      if (onTapNext) {
+                        verificationCode();
+                      }
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        left: getHorizontalSize(
+                          18.00,
+                        ),
+                        top: getVerticalSize(
+                          303.00,
+                        ),
+                        right: getHorizontalSize(
+                          18.00,
+                        ),
+                      ),
+                      child: Container(
+                          alignment: Alignment.center,
+                          height: getVerticalSize(
+                            60.00,
+                          ),
+                          width: getHorizontalSize(
+                            339.00,
+                          ),
+                          decoration: (onTapNext)
+                              ? AppDecoration.textStylePoppinsbold18
+                              : AppDecoration.textStylePoppinsbold182,
+                          child: /* Text(
+                                "lbl_login".tr,
+                                textAlign: TextAlign.center,
+                                style: AppStyle.textStylePoppinsbold18.copyWith(
+                                  fontSize: getFontSize(
+                                    18,
+                                  ),
+                                ),
+                              ), */
+                              Container(
+                                  child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                Align(
+                                    alignment: Alignment.center,
+                                    child: Padding(
+                                        padding: EdgeInsets.only(
+                                            left: getHorizontalSize(20.00),
+                                            top: getVerticalSize(10.00),
+                                            right: getHorizontalSize(20.00),
+                                            bottom: getVerticalSize(10.00)),
+                                        child: Text("lbl_next".tr,
+                                            overflow: TextOverflow.ellipsis,
+                                            textAlign: TextAlign.center,
+                                            style: AppStyle
+                                                .textStylePoppinsbold18
+                                                .copyWith(
+                                                    fontSize:
+                                                        getFontSize(18))))),
+                              ]))),
                     ),
                   ),
                 ],

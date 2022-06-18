@@ -1,9 +1,159 @@
+//import 'package:email_validator/email_validator.dart';
+import 'package:email_validator/email_validator.dart';
+
 import 'controller/signup_4_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:test1/core/app_export.dart';
 
-class Signup4Screen extends GetWidget<Signup4Controller> {
+class Signup4Screens extends StatefulWidget {
+  Signup4Screens({Key? key}) : super(key: key);
+
+  @override
+  State<Signup4Screens> createState() => Signup4Screen();
+}
+
+class Signup4Screen extends State<Signup4Screens> {
+  String phoneNumber = "";
+  String email = "";
+  String fullname = "";
+  String username = "";
+  String password = "";
+  String confirmPassword = "";
+  void onChangePhoneNumber(String value) {
+    phoneNumber = value;
+    debugPrint(phoneNumber);
+  }
+
+  void onChangeEmail(String value) {
+    email = value;
+    debugPrint(email);
+  }
+
+  void onChangeFullName(String value) {
+    fullname = value;
+    debugPrint(fullname);
+  }
+
+  void onChangeUsername(String value) {
+    username = value;
+    debugPrint(username);
+  }
+
+  void onChangePassword(String value) {
+    password = value;
+    debugPrint(password);
+  }
+
+  void onChangeConfirmPassword(String value) {
+    confirmPassword = value;
+    debugPrint(confirmPassword);
+  }
+
+  initState() {
+    phoneNumber = "";
+    email = "";
+    fullname = "";
+    username = "";
+    password = "";
+    confirmPassword = "";
+    _error = "";
+  }
+
+  String _error = "";
+  int counter = 0;
+  void setCounter() {
+    debugPrint("is in enter");
+    setState(() {
+      counter++;
+      debugPrint(counter.toString());
+    });
+  }
+
+  void setError(String error) {
+    debugPrint("is enter");
+    setState(() {
+      _error = error;
+    });
+  }
+
+  onTapLogin4() {
+    Get.toNamed(AppRoutes.login4Screen);
+  }
+
+  onTapSignUp4() {
+    Get.toNamed(AppRoutes.signup4Screen);
+  }
+
+  void register() async {
+    debugPrint(phoneNumber.toString() +
+        " " +
+        email.toString() +
+        " " +
+        password.toString());
+    debugPrint("enter register");
+    bool isvalid = validation(phoneNumber, email, fullname, username, password);
+    if (isvalid) {
+      int responseCode = await Signup4Controller.registerUser(
+          fullname, username, password, email, phoneNumber);
+      debugPrint("after controller " + responseCode.toString());
+      if (responseCode == 200) {
+        debugPrint("request success");
+        setError("");
+        onTapLogin4();
+      }
+      if (responseCode == 409) {
+        debugPrint("409 error");
+        setError("phone number belong to another account");
+      }
+      if (responseCode == 600 || (responseCode != 201 && responseCode != 409)) {
+        debugPrint("600 on other error");
+        setError("the request could not be sent");
+      }
+    }
+  }
+
+  bool validation(String phoneNumber, String email, String fullname,
+      String username, String password) {
+    if (phoneNumber.length < 6 || phoneNumber.length > 15) {
+      setError("le numero de telephone n'a pas la bonne taille[6-15]");
+      debugPrint('enter validation phoneNumber');
+      return false;
+    }
+    if (!EmailValidator.validate(email)) {
+      setError("le test de l'email n'est pas valide");
+      debugPrint('enter validation email');
+      return false;
+    }
+    if (fullname.length < 3 || fullname.length > 255) {
+      setError("le fullname  n'a pas la bonne taille(>3)");
+      debugPrint('enter validation fullname');
+      return false;
+    }
+    if (username.length < 3 || username.length > 255) {
+      setError("le username  n'a pas la bonne taille(>3)");
+      debugPrint('enter validation user');
+      return false;
+    }
+    if (password.length < 3 || password.length > 255) {
+      setError("le password  n'a pas la bonne taille(>3)");
+      debugPrint('enter validation password');
+      return false;
+    }
+    if (confirmPassword.length < 3 || confirmPassword.length > 255) {
+      setError("le confirm password  n'a pas la bonne taille(>3)");
+      debugPrint('enter validation password');
+      return false;
+    }
+    if (confirmPassword != password) {
+      setError("les mots de passe ne coincide pas");
+      debugPrint('enter validation two password');
+      return false;
+    }
+    debugPrint('enter validation true');
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -123,6 +273,23 @@ class Signup4Screen extends GetWidget<Signup4Controller> {
                           Padding(
                             padding: EdgeInsets.only(
                               left: getHorizontalSize(
+                                5,
+                              ),
+                              top: getVerticalSize(
+                                10,
+                              ),
+                              right: getHorizontalSize(
+                                5,
+                              ),
+                            ),
+                            child: Center(
+                                child: Text('$_error',
+                                    style: TextStyle(
+                                        color: Colors.red, fontSize: 14))),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                              left: getHorizontalSize(
                                 18.00,
                               ),
                               top: getVerticalSize(
@@ -140,8 +307,10 @@ class Signup4Screen extends GetWidget<Signup4Controller> {
                                 339.00,
                               ),
                               child: TextFormField(
+                                initialValue: phoneNumber,
+                                onChanged: (value) =>
+                                    onChangePhoneNumber(value),
                                 keyboardType: TextInputType.phone,
-                                controller: controller.firstNamefieldController,
                                 decoration: InputDecoration(
                                   hintText: "lbl_phone_number".tr,
                                   hintStyle: AppStyle.textStylePoppinsregular141
@@ -217,8 +386,9 @@ class Signup4Screen extends GetWidget<Signup4Controller> {
                                 339.00,
                               ),
                               child: TextFormField(
+                                initialValue: email,
+                                onChanged: (value) => onChangeEmail(value),
                                 keyboardType: TextInputType.emailAddress,
-                                controller: controller.emailfieldController,
                                 decoration: InputDecoration(
                                   hintText: "lbl_email".tr,
                                   hintStyle: AppStyle.textStylePoppinsregular141
@@ -294,83 +464,8 @@ class Signup4Screen extends GetWidget<Signup4Controller> {
                                 339.00,
                               ),
                               child: TextFormField(
-                                controller: controller.firstNamefieldController,
-                                decoration: InputDecoration(
-                                  hintText: "lbl_first_name".tr,
-                                  hintStyle: AppStyle.textStylePoppinsregular141
-                                      .copyWith(
-                                    fontSize: getFontSize(
-                                      14.0,
-                                    ),
-                                    color: ColorConstant.bluegray300,
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(
-                                      getHorizontalSize(
-                                        5.00,
-                                      ),
-                                    ),
-                                    borderSide: BorderSide(
-                                      color: ColorConstant.black9007f,
-                                      width: 0.5,
-                                    ),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(
-                                      getHorizontalSize(
-                                        5.00,
-                                      ),
-                                    ),
-                                    borderSide: BorderSide(
-                                      color: ColorConstant.black9007f,
-                                      width: 0.5,
-                                    ),
-                                  ),
-                                  isDense: true,
-                                  contentPadding: EdgeInsets.only(
-                                    left: getHorizontalSize(
-                                      20.00,
-                                    ),
-                                    top: getVerticalSize(
-                                      16.20,
-                                    ),
-                                    bottom: getVerticalSize(
-                                      16.20,
-                                    ),
-                                  ),
-                                ),
-                                style: TextStyle(
-                                  color: ColorConstant.bluegray300,
-                                  fontSize: getFontSize(
-                                    14.0,
-                                  ),
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                              left: getHorizontalSize(
-                                18.00,
-                              ),
-                              top: getVerticalSize(
-                                16.00,
-                              ),
-                              right: getHorizontalSize(
-                                18.00,
-                              ),
-                            ),
-                            child: Container(
-                              height: getVerticalSize(
-                                48.00,
-                              ),
-                              width: getHorizontalSize(
-                                339.00,
-                              ),
-                              child: TextFormField(
-                                controller: controller.fullNamefieldController,
+                                initialValue: fullname,
+                                onChanged: (value) => onChangeFullName(value),
                                 decoration: InputDecoration(
                                   hintText: "lbl_full_name".tr,
                                   hintStyle: AppStyle.textStylePoppinsregular141
@@ -446,7 +541,85 @@ class Signup4Screen extends GetWidget<Signup4Controller> {
                                 339.00,
                               ),
                               child: TextFormField(
-                                controller: controller.passwordfieldController,
+                                initialValue: username,
+                                onChanged: (value) => onChangeUsername(value),
+                                decoration: InputDecoration(
+                                  hintText: "lbl_username".tr,
+                                  hintStyle: AppStyle.textStylePoppinsregular141
+                                      .copyWith(
+                                    fontSize: getFontSize(
+                                      14.0,
+                                    ),
+                                    color: ColorConstant.bluegray300,
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(
+                                      getHorizontalSize(
+                                        5.00,
+                                      ),
+                                    ),
+                                    borderSide: BorderSide(
+                                      color: ColorConstant.black9007f,
+                                      width: 0.5,
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(
+                                      getHorizontalSize(
+                                        5.00,
+                                      ),
+                                    ),
+                                    borderSide: BorderSide(
+                                      color: ColorConstant.black9007f,
+                                      width: 0.5,
+                                    ),
+                                  ),
+                                  isDense: true,
+                                  contentPadding: EdgeInsets.only(
+                                    left: getHorizontalSize(
+                                      20.00,
+                                    ),
+                                    top: getVerticalSize(
+                                      16.20,
+                                    ),
+                                    bottom: getVerticalSize(
+                                      16.20,
+                                    ),
+                                  ),
+                                ),
+                                style: TextStyle(
+                                  color: ColorConstant.bluegray300,
+                                  fontSize: getFontSize(
+                                    14.0,
+                                  ),
+                                  fontFamily: 'Poppins',
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                              left: getHorizontalSize(
+                                18.00,
+                              ),
+                              top: getVerticalSize(
+                                16.00,
+                              ),
+                              right: getHorizontalSize(
+                                18.00,
+                              ),
+                            ),
+                            child: Container(
+                              height: getVerticalSize(
+                                48.00,
+                              ),
+                              width: getHorizontalSize(
+                                339.00,
+                              ),
+                              child: TextFormField(
+                                initialValue: password,
+                                onChanged: (value) => onChangePassword(value),
                                 obscureText: true,
                                 decoration: InputDecoration(
                                   hintText: "lbl_password".tr,
@@ -523,7 +696,10 @@ class Signup4Screen extends GetWidget<Signup4Controller> {
                                 339.00,
                               ),
                               child: TextFormField(
-                                controller: controller.confirmPassworController,
+                                initialValue: confirmPassword,
+                                obscureText: true,
+                                onChanged: (value) =>
+                                    onChangeConfirmPassword(value),
                                 decoration: InputDecoration(
                                   hintText: "msg_confirm_passwor".tr,
                                   hintStyle: AppStyle.textStylePoppinsregular141
@@ -646,7 +822,7 @@ class Signup4Screen extends GetWidget<Signup4Controller> {
                               textAlign: TextAlign.center,
                             ),
                           ),
-                          Padding(
+                          /*  Padding(
                             padding: EdgeInsets.only(
                               left: getHorizontalSize(
                                 16.00,
@@ -677,389 +853,70 @@ class Signup4Screen extends GetWidget<Signup4Controller> {
                                 ),
                               ),
                             ),
-                          ),
-                          Align(
-                            alignment: Alignment.centerLeft,
+                          ), */
+                          GestureDetector(
+                            onTap: () {
+                              register();
+                            },
                             child: Padding(
                               padding: EdgeInsets.only(
+                                left: getHorizontalSize(
+                                  18.00,
+                                ),
                                 top: getVerticalSize(
-                                  28.00,
+                                  1.00,
+                                ),
+                                right: getHorizontalSize(
+                                  18.00,
                                 ),
                               ),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Container(
-                                        height: getVerticalSize(
-                                          0.50,
-                                        ),
-                                        width: getHorizontalSize(
-                                          123.00,
-                                        ),
-                                        margin: EdgeInsets.only(
-                                          left: getHorizontalSize(
-                                            18.00,
-                                          ),
-                                          top: getVerticalSize(
-                                            11.00,
-                                          ),
-                                          bottom: getVerticalSize(
-                                            9.50,
-                                          ),
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: ColorConstant.black900,
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                          left: getHorizontalSize(
-                                            4.00,
-                                          ),
-                                        ),
-                                        child: Text(
-                                          "lbl_or_login_with".tr,
-                                          overflow: TextOverflow.ellipsis,
-                                          textAlign: TextAlign.center,
-                                          style: AppStyle
-                                              .textStylePoppinsregular142
-                                              .copyWith(
-                                            fontSize: getFontSize(
-                                              14,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        height: getVerticalSize(
-                                          0.50,
-                                        ),
-                                        width: getHorizontalSize(
-                                          123.00,
-                                        ),
-                                        margin: EdgeInsets.only(
-                                          left: getHorizontalSize(
-                                            4.00,
-                                          ),
-                                          top: getVerticalSize(
-                                            11.00,
-                                          ),
-                                          right: getHorizontalSize(
-                                            18.00,
-                                          ),
-                                          bottom: getVerticalSize(
-                                            9.50,
-                                          ),
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: ColorConstant.black900,
-                                        ),
-                                      ),
-                                    ],
+                              child: Container(
+                                  alignment: Alignment.center,
+                                  height: getVerticalSize(
+                                    60.00,
                                   ),
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                      top: getVerticalSize(
-                                        28.00,
-                                      ),
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Container(
-                                          height: getSize(
-                                            44.00,
-                                          ),
-                                          width: getSize(
-                                            44.00,
-                                          ),
-                                          margin: EdgeInsets.only(
-                                            left: getHorizontalSize(
-                                              80.05,
-                                            ),
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: ColorConstant.indigo500,
-                                            borderRadius: BorderRadius.circular(
-                                              getHorizontalSize(
-                                                22.00,
-                                              ),
-                                            ),
-                                          ),
-                                          child: Card(
-                                            clipBehavior: Clip.antiAlias,
-                                            elevation: 0,
-                                            margin: EdgeInsets.all(0),
-                                            color: ColorConstant.red700,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                getHorizontalSize(
-                                                  22.00,
-                                                ),
-                                              ),
-                                            ),
-                                            child: Stack(
-                                              children: [
-                                                Align(
-                                                  alignment: Alignment.center,
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(
-                                                      left: getHorizontalSize(
-                                                        14.95,
-                                                      ),
-                                                      top: getVerticalSize(
-                                                        14.00,
-                                                      ),
-                                                      right: getHorizontalSize(
-                                                        15.05,
-                                                      ),
-                                                      bottom: getVerticalSize(
-                                                        13.61,
-                                                      ),
-                                                    ),
-                                                    child: Container(
-                                                      height: getVerticalSize(
-                                                        16.39,
-                                                      ),
-                                                      width: getHorizontalSize(
-                                                        14.00,
-                                                      ),
-                                                      child: SvgPicture.asset(
-                                                        ImageConstant.imgEmail,
-                                                        fit: BoxFit.fill,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          height: getSize(
-                                            44.00,
-                                          ),
-                                          width: getSize(
-                                            44.00,
-                                          ),
-                                          margin: EdgeInsets.only(
-                                            left: getHorizontalSize(
-                                              20.95,
-                                            ),
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: ColorConstant.indigo500,
-                                            borderRadius: BorderRadius.circular(
-                                              getHorizontalSize(
-                                                22.00,
-                                              ),
-                                            ),
-                                          ),
-                                          child: Card(
-                                            clipBehavior: Clip.antiAlias,
-                                            elevation: 0,
-                                            margin: EdgeInsets.all(0),
-                                            color: ColorConstant.indigo500,
-                                            child: Stack(
-                                              children: [
-                                                Align(
-                                                  alignment: Alignment.center,
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(
-                                                      left: getHorizontalSize(
-                                                        14.95,
-                                                      ),
-                                                      top: getVerticalSize(
-                                                        14.00,
-                                                      ),
-                                                      right: getHorizontalSize(
-                                                        15.05,
-                                                      ),
-                                                      bottom: getVerticalSize(
-                                                        13.61,
-                                                      ),
-                                                    ),
-                                                    child: Container(
-                                                      height: getVerticalSize(
-                                                        16.39,
-                                                      ),
-                                                      width: getHorizontalSize(
-                                                        14.00,
-                                                      ),
-                                                      child: SvgPicture.asset(
-                                                        ImageConstant
-                                                            .imgLinkedIn,
-                                                        fit: BoxFit.fill,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          height: getSize(
-                                            44.00,
-                                          ),
-                                          width: getSize(
-                                            44.00,
-                                          ),
-                                          margin: EdgeInsets.only(
-                                            left: getHorizontalSize(
-                                              20.95,
-                                            ),
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: ColorConstant.indigo500,
-                                            borderRadius: BorderRadius.circular(
-                                              getHorizontalSize(
-                                                22.00,
-                                              ),
-                                            ),
-                                          ),
-                                          child: Card(
-                                            clipBehavior: Clip.antiAlias,
-                                            elevation: 0,
-                                            margin: EdgeInsets.all(0),
-                                            color: ColorConstant.indigo500,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                getHorizontalSize(
-                                                  22.00,
-                                                ),
-                                              ),
-                                            ),
-                                            child: Stack(
-                                              children: [
-                                                Align(
-                                                  alignment: Alignment.center,
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(
-                                                      left: getHorizontalSize(
-                                                        17.38,
-                                                      ),
-                                                      top: getVerticalSize(
-                                                        14.00,
-                                                      ),
-                                                      right: getHorizontalSize(
-                                                        18.12,
-                                                      ),
-                                                      bottom: getVerticalSize(
-                                                        13.00,
-                                                      ),
-                                                    ),
-                                                    child: Container(
-                                                      height: getVerticalSize(
-                                                        17.00,
-                                                      ),
-                                                      width: getHorizontalSize(
-                                                        8.50,
-                                                      ),
-                                                      child: SvgPicture.asset(
-                                                        ImageConstant
-                                                            .imgFacebook,
-                                                        fit: BoxFit.fill,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          height: getSize(
-                                            44.00,
-                                          ),
-                                          width: getSize(
-                                            44.00,
-                                          ),
-                                          margin: EdgeInsets.only(
-                                            left: getHorizontalSize(
-                                              20.95,
-                                            ),
-                                            right: getHorizontalSize(
-                                              60.05,
-                                            ),
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: ColorConstant.red600,
-                                            borderRadius: BorderRadius.circular(
-                                              getHorizontalSize(
-                                                22.00,
-                                              ),
-                                            ),
-                                          ),
-                                          child: Card(
-                                            clipBehavior: Clip.antiAlias,
-                                            elevation: 0,
-                                            margin: EdgeInsets.all(0),
-                                            color: ColorConstant.red600,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                getHorizontalSize(
-                                                  22.00,
-                                                ),
-                                              ),
-                                            ),
-                                            child: Stack(
-                                              children: [
-                                                Align(
-                                                  alignment: Alignment.center,
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(
-                                                      left: getHorizontalSize(
-                                                        13.05,
-                                                      ),
-                                                      top: getVerticalSize(
-                                                        14.00,
-                                                      ),
-                                                      right: getHorizontalSize(
-                                                        13.95,
-                                                      ),
-                                                      bottom: getVerticalSize(
-                                                        13.00,
-                                                      ),
-                                                    ),
-                                                    child: Container(
-                                                      height: getSize(
-                                                        17.00,
-                                                      ),
-                                                      width: getSize(
-                                                        17.00,
-                                                      ),
-                                                      child: SvgPicture.asset(
-                                                        ImageConstant.imgGoogle,
-                                                        fit: BoxFit.fill,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                  width: getHorizontalSize(
+                                    339.00,
                                   ),
-                                ],
-                              ),
+                                  decoration:
+                                      AppDecoration.textStylePoppinsbold18,
+                                  child: /* Text(
+                                "lbl_login".tr,
+                                textAlign: TextAlign.center,
+                                style: AppStyle.textStylePoppinsbold18.copyWith(
+                                  fontSize: getFontSize(
+                                    18,
+                                  ),
+                                ),
+                              ), */
+                                      Container(
+                                          child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                        Align(
+                                            alignment: Alignment.center,
+                                            child: Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: getHorizontalSize(
+                                                        20.00),
+                                                    top: getVerticalSize(10.00),
+                                                    right: getHorizontalSize(
+                                                        20.00),
+                                                    bottom:
+                                                        getVerticalSize(10.00)),
+                                                child: Text("lbl_register".tr,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    textAlign: TextAlign.center,
+                                                    style: AppStyle
+                                                        .textStylePoppinsbold18
+                                                        .copyWith(
+                                                            fontSize:
+                                                                getFontSize(
+                                                                    18))))),
+                                      ]))),
                             ),
                           ),
                           Container(
@@ -1068,53 +925,13 @@ class Signup4Screen extends GetWidget<Signup4Controller> {
                                 16.00,
                               ),
                               top: getVerticalSize(
-                                42.00,
+                                10.00,
                               ),
                               right: getHorizontalSize(
                                 16.00,
                               ),
                             ),
-                            child: /* RichText(
-                              text: TextSpan(
-                                children: <InlineSpan>[
-                                  TextSpan(
-                                    text: "msg_already_have_an2".tr,
-                                    style: TextStyle(
-                                      color: ColorConstant.black900,
-                                      fontSize: getFontSize(
-                                        12,
-                                      ),
-                                      fontFamily: 'Poppins',
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: ' ',
-                                    style: TextStyle(
-                                      color: ColorConstant.black900,
-                                      fontSize: getFontSize(
-                                        12,
-                                      ),
-                                      fontFamily: 'Poppins',
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: "lbl_log_in2".tr,
-                                    style: TextStyle(
-                                      color: ColorConstant.lightBlueA200,
-                                      fontSize: getFontSize(
-                                        12,
-                                      ),
-                                      fontFamily: 'Poppins',
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  )
-                                ],
-                              ),
-                              textAlign: TextAlign.center,
-                            ), */
-                                Row(
+                            child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 Text(
@@ -1175,9 +992,5 @@ class Signup4Screen extends GetWidget<Signup4Controller> {
         ),
       ),
     );
-  }
-
-  onTapLogin4() {
-    Get.toNamed(AppRoutes.login4Screen);
   }
 }
