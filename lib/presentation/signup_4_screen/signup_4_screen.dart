@@ -1,5 +1,6 @@
 //import 'package:email_validator/email_validator.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 
 import 'controller/signup_4_controller.dart';
 import 'package:flutter/material.dart';
@@ -301,17 +302,22 @@ class Signup4Screen extends State<Signup4Screens> {
                             ),
                             child: Container(
                               height: getVerticalSize(
-                                48.00,
+                                100.00,
                               ),
                               width: getHorizontalSize(
                                 339.00,
                               ),
-                              child: TextFormField(
-                                initialValue: phoneNumber,
-                                onChanged: (value) =>
-                                    onChangePhoneNumber(value),
-                                keyboardType: TextInputType.phone,
+                              child: IntlPhoneField(
+                                onChanged: (phone) =>
+                                    onChangePhoneNumber(phone.completeNumber),
                                 decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: ColorConstant.black9007f,
+                                      width: 0.5,
+                                    ),
+                                  ),
+                                  isDense: true,
                                   hintText: "lbl_phone_number".tr,
                                   hintStyle: AppStyle.textStylePoppinsregular141
                                       .copyWith(
@@ -320,41 +326,11 @@ class Signup4Screen extends State<Signup4Screens> {
                                     ),
                                     color: ColorConstant.bluegray300,
                                   ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(
-                                      getHorizontalSize(
-                                        5.00,
-                                      ),
-                                    ),
-                                    borderSide: BorderSide(
-                                      color: ColorConstant.black9007f,
-                                      width: 0.5,
-                                    ),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(
-                                      getHorizontalSize(
-                                        5.00,
-                                      ),
-                                    ),
-                                    borderSide: BorderSide(
-                                      color: ColorConstant.black9007f,
-                                      width: 0.5,
-                                    ),
-                                  ),
-                                  isDense: true,
-                                  contentPadding: EdgeInsets.only(
-                                    left: getHorizontalSize(
-                                      20.00,
-                                    ),
-                                    top: getVerticalSize(
-                                      16.20,
-                                    ),
-                                    bottom: getVerticalSize(
-                                      16.20,
-                                    ),
-                                  ),
                                 ),
+                                initialCountryCode: "CM",
+                                onCountryChanged: (country) {
+                                  print('Country changed to: ' + country.name);
+                                },
                                 style: TextStyle(
                                   color: ColorConstant.bluegray300,
                                   fontSize: getFontSize(
@@ -822,38 +798,6 @@ class Signup4Screen extends State<Signup4Screens> {
                               textAlign: TextAlign.center,
                             ),
                           ),
-                          /*  Padding(
-                            padding: EdgeInsets.only(
-                              left: getHorizontalSize(
-                                16.00,
-                              ),
-                              top: getVerticalSize(
-                                14.38,
-                              ),
-                              right: getHorizontalSize(
-                                16.00,
-                              ),
-                            ),
-                            child: Container(
-                              alignment: Alignment.center,
-                              height: getVerticalSize(
-                                60.00,
-                              ),
-                              width: getHorizontalSize(
-                                343.00,
-                              ),
-                              decoration: AppDecoration.textStylePoppinsbold18,
-                              child: Text(
-                                "lbl_register".tr,
-                                textAlign: TextAlign.center,
-                                style: AppStyle.textStylePoppinsbold18.copyWith(
-                                  fontSize: getFontSize(
-                                    18,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ), */
                           GestureDetector(
                             onTap: () {
                               register();
@@ -880,21 +824,12 @@ class Signup4Screen extends State<Signup4Screens> {
                                   ),
                                   decoration:
                                       AppDecoration.textStylePoppinsbold18,
-                                  child: /* Text(
-                                "lbl_login".tr,
-                                textAlign: TextAlign.center,
-                                style: AppStyle.textStylePoppinsbold18.copyWith(
-                                  fontSize: getFontSize(
-                                    18,
-                                  ),
-                                ),
-                              ), */
-                                      Container(
-                                          child: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
+                                  child: Container(
+                                      child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
                                         Align(
                                             alignment: Alignment.center,
                                             child: Padding(

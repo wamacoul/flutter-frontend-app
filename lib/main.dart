@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       fallbackLocale: Locale('en', 'US'),
       title: 'test1',
       initialBinding: InitialBindings(),
-      initialRoute: AppRoutes.authWelcomeScreen,
+      initialRoute: AppRoutes.splashScreen,
       getPages: AppRoutes.pages,
     );
   }

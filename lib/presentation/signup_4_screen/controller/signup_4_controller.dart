@@ -39,7 +39,6 @@ class Signup4Controller extends GetxController with StateMixin<dynamic> {
       String email, String phoneNumber) async {
     String stringUrl =
         'https://reseau-mobile-gi2023.herokuapp.com/mobile/api/users';
-    //String stringUrl = 'http://10.0.2.2:8000/api/administrators';
     var url = Uri.parse(stringUrl);
     try {
       final response = await http.post(url,

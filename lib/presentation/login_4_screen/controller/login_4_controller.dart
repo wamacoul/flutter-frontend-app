@@ -33,8 +33,7 @@ class Login4Controller extends GetxController with StateMixin<dynamic> {
             "content-type": "application/json",
             "Accept": "application/json",
           },
-          body: jsonEncode(
-              {"username": "donel@gmail.com", "password": "password"}));
+          body: jsonEncode({"username": phoneNumber, "password": password}));
 
       return response.statusCode;
     } catch (e) {

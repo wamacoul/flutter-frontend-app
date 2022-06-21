@@ -80,7 +80,7 @@ class AuthWelcomeScreen extends GetWidget<AuthWelcomeController> {
                               ),
                             ),
                             child: Text(
-                              "msg_lorem_ipsum_dol".tr,
+                              "we are happy to see your again",
                               maxLines: null,
                               textAlign: TextAlign.left,
                               style: AppStyle.textStylePoppinsmedium14.copyWith(

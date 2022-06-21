@@ -17,6 +17,7 @@ import 'package:test1/presentation/login_4_screen/binding/login_4_binding.dart';
 import 'package:test1/presentation/app_navigation_screen/app_navigation_screen.dart';
 import 'package:test1/presentation/app_navigation_screen/binding/app_navigation_binding.dart';
 import 'package:get/get.dart';
+import 'package:test1/splashPage.dart';
 
 class AppRoutes {
   static String authWelcomeScreen = '/auth_welcome_screen';
@@ -37,9 +38,15 @@ class AppRoutes {
 
   static String appNavigationScreen = '/app_navigation_screen';
 
+  static String splashScreen = '/splash_screen';
+
   static String initialRoute = '/initialRoute';
 
   static List<GetPage> pages = [
+    GetPage(
+      name: splashScreen,
+      page: () => SplashPage(),
+    ),
     GetPage(
       name: authWelcomeScreen,
       page: () => AuthWelcomeScreen(),
@@ -63,7 +70,7 @@ class AppRoutes {
     ),
     GetPage(
       name: otp1Screen,
-      page: () => Otp1Screens(phoneNumber: 696918852.toString()),
+      page: () => Otp1Screens(phoneNumber: "+237696918852"),
       bindings: [
         Otp1Binding(),
       ],

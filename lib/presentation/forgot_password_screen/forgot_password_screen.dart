@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:test1/presentation/otp1_screen/otp1_screen.dart';
 
 import 'controller/forgot_password_controller.dart';
@@ -33,7 +34,7 @@ class ForgotPasswordScreen extends State<ForgotPasswordScreens> {
 
       debugPrint(sizephoneNumber.toString());
       debugPrint(value.length.toString());
-      if (value.length > 6 && value.length < 15) {
+      if (value.length > 10 && value.length < 15) {
         sizephoneNumber = true;
       } else {
         sizephoneNumber = false;
@@ -185,69 +186,47 @@ class ForgotPasswordScreen extends State<ForgotPasswordScreens> {
                               ),
                             ),
                             child: Container(
-                              height: getVerticalSize(
-                                48.00,
-                              ),
-                              width: getHorizontalSize(
-                                343.00,
-                              ),
-                              child: TextFormField(
-                                keyboardType: TextInputType.phone,
-                                onChanged: (value) => setPhoneNumber(value),
-                                decoration: InputDecoration(
-                                  hintText: "msg_enter_your_regi_phone".tr,
-                                  hintStyle: AppStyle.textStylePoppinsmedium141
-                                      .copyWith(
+                                height: getVerticalSize(
+                                  100.00,
+                                ),
+                                width: getHorizontalSize(
+                                  343.00,
+                                ),
+                                child: IntlPhoneField(
+                                  onChanged: (phone) =>
+                                      setPhoneNumber(phone.completeNumber),
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: ColorConstant.black9007f,
+                                        width: 0.5,
+                                      ),
+                                    ),
+                                    isDense: true,
+                                    hintText: "lbl_phone_number".tr,
+                                    hintStyle: AppStyle
+                                        .textStylePoppinsregular141
+                                        .copyWith(
+                                      fontSize: getFontSize(
+                                        14.0,
+                                      ),
+                                      color: ColorConstant.bluegray300,
+                                    ),
+                                  ),
+                                  initialCountryCode: "CM",
+                                  onCountryChanged: (country) {
+                                    debugPrint(
+                                        'Country changed to: ' + country.name);
+                                  },
+                                  style: TextStyle(
+                                    color: ColorConstant.bluegray300,
                                     fontSize: getFontSize(
                                       14.0,
                                     ),
-                                    color: ColorConstant.gray9007e,
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.w400,
                                   ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(
-                                      getHorizontalSize(
-                                        5.00,
-                                      ),
-                                    ),
-                                    borderSide: BorderSide(
-                                      color: ColorConstant.gray90063,
-                                      width: 1,
-                                    ),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(
-                                      getHorizontalSize(
-                                        5.00,
-                                      ),
-                                    ),
-                                    borderSide: BorderSide(
-                                      color: ColorConstant.gray90063,
-                                      width: 1,
-                                    ),
-                                  ),
-                                  isDense: true,
-                                  contentPadding: EdgeInsets.only(
-                                    left: getHorizontalSize(
-                                      17.00,
-                                    ),
-                                    top: getVerticalSize(
-                                      15.21,
-                                    ),
-                                    bottom: getVerticalSize(
-                                      14.21,
-                                    ),
-                                  ),
-                                ),
-                                style: TextStyle(
-                                  color: ColorConstant.gray9007e,
-                                  fontSize: getFontSize(
-                                    14.0,
-                                  ),
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
+                                )),
                           ),
                           Padding(
                             padding: EdgeInsets.only(
@@ -286,7 +265,7 @@ class ForgotPasswordScreen extends State<ForgotPasswordScreens> {
                                   16.00,
                                 ),
                                 top: getVerticalSize(
-                                  446.00,
+                                  400.00,
                                 ),
                                 right: getHorizontalSize(
                                   16.00,
@@ -303,21 +282,12 @@ class ForgotPasswordScreen extends State<ForgotPasswordScreens> {
                                   decoration: (sizephoneNumber)
                                       ? AppDecoration.textStylePoppinsbold18
                                       : AppDecoration.textStylePoppinsbold182,
-                                  child: /* Text(
-                                "lbl_login".tr,
-                                textAlign: TextAlign.center,
-                                style: AppStyle.textStylePoppinsbold18.copyWith(
-                                  fontSize: getFontSize(
-                                    18,
-                                  ),
-                                ),
-                              ), */
-                                      Container(
-                                          child: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
+                                  child: Container(
+                                      child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
                                         Align(
                                             alignment: Alignment.center,
                                             child: Padding(

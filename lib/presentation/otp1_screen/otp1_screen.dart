@@ -25,7 +25,7 @@ class Otp1Screen extends State<Otp1Screens> {
     });
   });
   void _startTimer() {
-    _chrono = 10;
+    _chrono = 25;
     if (_timer != null) {
       _timer.cancel();
     }
@@ -77,7 +77,7 @@ class Otp1Screen extends State<Otp1Screens> {
   void sendCode() async {
     debugPrint("enter sendCode");
     int responseCode =
-        await Otp1Controller.sendcodeUser('+237' + '${widget.phoneNumber}');
+        await Otp1Controller.sendcodeUser('${widget.phoneNumber}');
     if (responseCode != 200) {
       setError(
           "Failed to send code. try again by pressing resend or back to change phone Number");
@@ -199,19 +199,6 @@ class Otp1Screen extends State<Otp1Screens> {
                                 height: 1.43,
                               ),
                             ),
-                            /* TextSpan(
-                              text: "lbl_change_phone_number".tr,
-                              style: TextStyle(
-                                color: ColorConstant.lightBlueA200,
-                                fontSize: getFontSize(
-                                  14,
-                                ),
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.w500,
-                                letterSpacing: 0.12,
-                                height: 1.43,
-                              ),
-                            ) */
                           ],
                         ),
                         textAlign: TextAlign.left,
@@ -234,39 +221,7 @@ class Otp1Screen extends State<Otp1Screens> {
                       width: getHorizontalSize(
                         336.00,
                       ),
-                      child: /* Obx(
-                        () => PinCodeTextField(
-                          appContext: context,
-                          length: 4,
-                          obscureText: false,
-                          obscuringCharacter: '*',
-                          keyboardType: TextInputType.number,
-                          autoDismissKeyboard: true,
-                          enableActiveFill: true,
-                          onChanged: (value) {},
-                          pinTheme: PinTheme(
-                            fieldHeight: getHorizontalSize(
-                              80.00,
-                            ),
-                            fieldWidth: getHorizontalSize(
-                              72.00,
-                            ),
-                            shape: PinCodeFieldShape.box,
-                            borderRadius: BorderRadius.circular(
-                              getHorizontalSize(
-                                5.00,
-                              ),
-                            ),
-                            selectedFillColor: ColorConstant.gray4007e,
-                            activeFillColor: ColorConstant.gray4007e,
-                            inactiveFillColor: ColorConstant.gray4007e,
-                            inactiveColor: ColorConstant.fromHex("#1212121D"),
-                            selectedColor: ColorConstant.fromHex("#1212121D"),
-                            activeColor: ColorConstant.fromHex("#1212121D"),
-                          ),
-                        ),
-                      ), */
-                          PinCodeFields(
+                      child: PinCodeFields(
                         keyboardType: TextInputType.number,
                         length: 6,
                         onChange: (value) => {
@@ -276,7 +231,6 @@ class Otp1Screen extends State<Otp1Screens> {
                             }
                         },
                         onComplete: (result) {
-                          // Your logic with code
                           onTapNext = true;
                           codeUserEnter = result;
                           debugPrint(result);
@@ -372,76 +326,24 @@ class Otp1Screen extends State<Otp1Screens> {
                           21.00,
                         ),
                       ),
-                      child: /* Text(
-                        "lbl_resend".tr,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.left,
-                        style: AppStyle.textStylePoppinssemibold14.copyWith(
-                          fontSize: getFontSize(
-                            14,
-                          ),
-                          letterSpacing: 0.12,
-                          height: 1.43,
-                        ),
-                      ), */
-                          GestureDetector(
-                              onTap: () {
-                                // onTapForgotPassword();
-                                debugPrint("test");
-                                if (_chrono < 1) {
-                                  _startTimer();
-                                  sendCode();
-                                  debugPrint("enter");
-                                }
-                              },
-                              child: Text("lbl_resend".tr,
-                                  overflow: TextOverflow.ellipsis,
-                                  textAlign: TextAlign.center,
-                                  style: (_chrono > 0)
-                                      ? AppStyle.textStylePoppinsbold12
-                                      : AppStyle.textStylePoppinsbold122
-                                          .copyWith(
-                                              fontSize: getFontSize(12)))),
+                      child: GestureDetector(
+                          onTap: () {
+                            debugPrint("test");
+                            if (_chrono < 1) {
+                              _startTimer();
+                              sendCode();
+                              debugPrint("enter");
+                            }
+                          },
+                          child: Text("lbl_resend".tr,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                              style: (_chrono > 0)
+                                  ? AppStyle.textStylePoppinsbold12
+                                  : AppStyle.textStylePoppinsbold122
+                                      .copyWith(fontSize: getFontSize(12)))),
                     ),
                   ),
-                  /* Align(
-                    alignment: Alignment.center,
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                        left: getHorizontalSize(
-                          16.00,
-                        ),
-                        top: getVerticalSize(
-                          303.00,
-                        ),
-                        right: getHorizontalSize(
-                          16.00,
-                        ),
-                        bottom: getVerticalSize(
-                          20.00,
-                        ),
-                      ),
-                      child: Container(
-                        alignment: Alignment.center,
-                        height: getVerticalSize(
-                          60.00,
-                        ),
-                        width: getHorizontalSize(
-                          343.00,
-                        ),
-                        decoration: AppDecoration.textStylePoppinsbold182,
-                        child: Text(
-                          "lbl_next".tr,
-                          textAlign: TextAlign.center,
-                          style: AppStyle.textStylePoppinsbold182.copyWith(
-                            fontSize: getFontSize(
-                              18,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ), */
                   Padding(
                     padding: EdgeInsets.only(
                       left: getHorizontalSize(
@@ -460,7 +362,6 @@ class Otp1Screen extends State<Otp1Screens> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      //login();
                       if (onTapNext) {
                         verificationCode();
                       }
@@ -488,21 +389,11 @@ class Otp1Screen extends State<Otp1Screens> {
                           decoration: (onTapNext)
                               ? AppDecoration.textStylePoppinsbold18
                               : AppDecoration.textStylePoppinsbold182,
-                          child: /* Text(
-                                "lbl_login".tr,
-                                textAlign: TextAlign.center,
-                                style: AppStyle.textStylePoppinsbold18.copyWith(
-                                  fontSize: getFontSize(
-                                    18,
-                                  ),
-                                ),
-                              ), */
-                              Container(
-                                  child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
+                          child: Container(
+                              child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
                                 Align(
                                     alignment: Alignment.center,
                                     child: Padding(

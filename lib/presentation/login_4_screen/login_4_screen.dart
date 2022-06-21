@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:test1/presentation/otp1_screen/otp1_screen.dart';
 
 import 'controller/login_4_controller.dart';
@@ -272,70 +273,47 @@ class Login4Screen extends State<Login4Screens> {
                               ),
                             ),
                             child: Container(
-                              height: getVerticalSize(
-                                60.00,
-                              ),
-                              width: getHorizontalSize(
-                                339.00,
-                              ),
-                              child: TextFormField(
-                                onChanged: (value) =>
-                                    onChangePhoneNumber(value),
-                                keyboardType: TextInputType.phone,
-                                decoration: InputDecoration(
-                                  hintText: "lbl_phone_number".tr,
-                                  hintStyle: AppStyle.textStylePoppinsregular141
-                                      .copyWith(
+                                height: getVerticalSize(
+                                  100.00,
+                                ),
+                                width: getHorizontalSize(
+                                  339.00,
+                                ),
+                                child: IntlPhoneField(
+                                  onChanged: (phone) =>
+                                      onChangePhoneNumber(phone.completeNumber),
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: ColorConstant.black9007f,
+                                        width: 0.5,
+                                      ),
+                                    ),
+                                    isDense: true,
+                                    hintText: "lbl_phone_number".tr,
+                                    hintStyle: AppStyle
+                                        .textStylePoppinsregular141
+                                        .copyWith(
+                                      fontSize: getFontSize(
+                                        14.0,
+                                      ),
+                                      color: ColorConstant.bluegray300,
+                                    ),
+                                  ),
+                                  initialCountryCode: "CM",
+                                  onCountryChanged: (country) {
+                                    print(
+                                        'Country changed to: ' + country.name);
+                                  },
+                                  style: TextStyle(
+                                    color: ColorConstant.bluegray300,
                                     fontSize: getFontSize(
                                       14.0,
                                     ),
-                                    color: ColorConstant.bluegray300,
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.w400,
                                   ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(
-                                      getHorizontalSize(
-                                        5.00,
-                                      ),
-                                    ),
-                                    borderSide: BorderSide(
-                                      color: ColorConstant.black9007f,
-                                      width: 0.5,
-                                    ),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(
-                                      getHorizontalSize(
-                                        5.00,
-                                      ),
-                                    ),
-                                    borderSide: BorderSide(
-                                      color: ColorConstant.black9007f,
-                                      width: 0.5,
-                                    ),
-                                  ),
-                                  isDense: true,
-                                  contentPadding: EdgeInsets.only(
-                                    left: getHorizontalSize(
-                                      20.00,
-                                    ),
-                                    top: getVerticalSize(
-                                      21.20,
-                                    ),
-                                    bottom: getVerticalSize(
-                                      20.20,
-                                    ),
-                                  ),
-                                ),
-                                style: TextStyle(
-                                  color: ColorConstant.bluegray300,
-                                  fontSize: getFontSize(
-                                    14.0,
-                                  ),
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                            ),
+                                )),
                           ),
                           Padding(
                             padding: EdgeInsets.only(
@@ -428,52 +406,39 @@ class Login4Screen extends State<Login4Screens> {
                                   18.00,
                                 ),
                               ),
-                              child: /* Text(
-                                "msg_forgot_password".tr,
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.right,
-                                style:
-                                    AppStyle.textStylePoppinsbold122.copyWith(
-                                  fontSize: getFontSize(
-                                    12,
-                                  ),
-                                ),
-                              ), */
-                                  GestureDetector(
-                                      onTap: () {
-                                        onTapForgotPassword();
-                                      },
-                                      child: Container(
-                                          child: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                            Align(
-                                                alignment: Alignment.topRight,
-                                                child: Padding(
-                                                    padding: EdgeInsets.only(
-                                                        left: getHorizontalSize(
-                                                            20.00),
-                                                        top: getVerticalSize(
-                                                            10.00),
-                                                        right: getHorizontalSize(
-                                                            20.00),
-                                                        bottom: getVerticalSize(
-                                                            10.00)),
-                                                    child: Text(
-                                                        "msg_forgot_password"
-                                                            .tr,
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        style: AppStyle
-                                                            .textStylePoppinsbold122
-                                                            .copyWith(
-                                                                fontSize: getFontSize(
+                              child: GestureDetector(
+                                  onTap: () {
+                                    onTapForgotPassword();
+                                  },
+                                  child: Container(
+                                      child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                        Align(
+                                            alignment: Alignment.topRight,
+                                            child: Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: getHorizontalSize(
+                                                        20.00),
+                                                    top: getVerticalSize(10.00),
+                                                    right: getHorizontalSize(
+                                                        20.00),
+                                                    bottom:
+                                                        getVerticalSize(10.00)),
+                                                child: Text(
+                                                    "msg_forgot_password".tr,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    textAlign: TextAlign.center,
+                                                    style: AppStyle
+                                                        .textStylePoppinsbold122
+                                                        .copyWith(
+                                                            fontSize:
+                                                                getFontSize(
                                                                     12))))),
-                                          ]))),
+                                      ]))),
                             ),
                           ),
                           GestureDetector(
@@ -502,21 +467,12 @@ class Login4Screen extends State<Login4Screens> {
                                   ),
                                   decoration:
                                       AppDecoration.textStylePoppinsbold18,
-                                  child: /* Text(
-                                "lbl_login".tr,
-                                textAlign: TextAlign.center,
-                                style: AppStyle.textStylePoppinsbold18.copyWith(
-                                  fontSize: getFontSize(
-                                    18,
-                                  ),
-                                ),
-                              ), */
-                                      Container(
-                                          child: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
+                                  child: Container(
+                                      child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
                                         Align(
                                             alignment: Alignment.center,
                                             child: Padding(
@@ -937,48 +893,7 @@ class Login4Screen extends State<Login4Screens> {
                                 18.00,
                               ),
                             ),
-                            child: /* RichText(
-                              text: TextSpan(
-                                children: <InlineSpan>[
-                                  TextSpan(
-                                    text: "msg_don_t_have_an_a2".tr,
-                                    style: TextStyle(
-                                      color: ColorConstant.black900,
-                                      fontSize: getFontSize(
-                                        12,
-                                      ),
-                                      fontFamily: 'Poppins',
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: ' ',
-                                    style: TextStyle(
-                                      color: ColorConstant.black900,
-                                      fontSize: getFontSize(
-                                        12,
-                                      ),
-                                      fontFamily: 'Poppins',
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                  TextSpan(
-                                      /*  text: "lbl_register_here".tr,
-                                    style: TextStyle(
-                                      color: ColorConstant.lightBlueA200,
-                                      fontSize: getFontSize(
-                                        12,
-                                      ),
-                                      fontFamily: 'Poppins',
-                                      fontWeight: FontWeight.w700,
-                                      decoration: TextDecoration.underline,
-                                    ), */
-                                      )
-                                ],
-                              ),
-                              textAlign: TextAlign.center,
-                            ), */
-                                Row(
+                            child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 Text(
